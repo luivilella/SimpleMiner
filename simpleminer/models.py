@@ -1,19 +1,11 @@
 # coding: utf8
 import json
 import sqlalchemy as sa
-from os.path import abspath
 from ConfigParser import SafeConfigParser
 from sqlalchemy.ext.declarative import declarative_base
 from dbaggregator import DBAggregator
 
-db = DBAggregator()
-
-config_parser = SafeConfigParser()
-config_parser.read(['config/miner-db.ini',])
-
-db.add('confs', dict(config_parser.items('miner-dbs'))['db_configs'])
-
-Base = declarative_base(bind=db.confs.engine)
+Base = declarative_base()
 
 class TbConnection(Base):
     __tablename__ = 'tb_connection'
@@ -153,8 +145,16 @@ class TbMinerView(Base):
         self.__parameters_default = json.dumps(value)
 
 
-def create_tables():
-    Base.metadata.create_all()
+def create_tables(engine):
+    Base.metadata.create_all(engine)
+
 
 if __name__ == '__main__':
-    create_tables()
+    db = DBAggregator()
+
+    config_parser = SafeConfigParser()
+    config_parser.read(['config/miner-db.ini',])
+
+    db.add('confs', dict(config_parser.items('miner-dbs'))['db_configs'])
+
+    create_tables(db.confs.engine)

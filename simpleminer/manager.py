@@ -8,6 +8,13 @@ from ConfigParser import SafeConfigParser
 from tqdm import tqdm
 from dbaggregator import DBAggregator
 from dbaggregator.dbaggregator import snake2camel
+from simpleminer.models import (
+    TbConnection,
+    TbMiner,
+    TbMinerLog,
+    TbCategory,
+    TbMinerView,
+)
 
 class MinerCore(object):
     """docstring for MinerCore"""
@@ -295,10 +302,10 @@ class MinerManager(object):
         self.mc = MinerCore(self.db_miner)
 
     def get_connection(self, connection):
-        if not isinstance(connection, self.db_conf.tables.TbConnection):
+        if not isinstance(connection, TbConnection):
             if not connection in self.connections:
                 sess = self.db_conf.sigle_session()
-                tbl = self.db_conf.tables.TbConnection
+                tbl = TbConnection
                 q = sess.query(tbl)
                 if str(connection).isdigit():
                     q = q.filter(tbl.id == connection)
@@ -317,7 +324,7 @@ class MinerManager(object):
             slug = 'db_{}_{}'.format(random.randint(1, 10000), random.randint(1, 10000))
 
         sess_conf = self.db_conf.sigle_session()
-        connection = self.db_conf.tables.TbConnection(
+        connection = TbConnection(
             name=name,
             slug=slug,
             string=str_conn,
@@ -353,7 +360,7 @@ class MinerManager(object):
         r = self.mc.miner_from_sql(sql_sess, sql, limit_sess_add=self.db_miner.limit_inserts)
 
         sess_conf = self.db_conf.sigle_session()
-        miner = self.db_conf.tables.TbMiner(
+        miner = TbMiner(
             connection_id=self.get_connection(connection).id,
             name=name,
             sql=sql,
@@ -368,7 +375,7 @@ class MinerManager(object):
         sess_conf.add(miner)
         sess_conf.flush()
 
-        miner_log = self.format_minerlog(self.db_conf.tables.TbMinerLog(), r)
+        miner_log = self.format_minerlog(TbMinerLog(), r)
         miner_log.miner_id = miner.id
         miner_log.finished_execution = True
         miner_log.remark = u'Create new miner'
@@ -386,7 +393,7 @@ class MinerManager(object):
                 'help_text': '',
             }
 
-        miner_view = self.db_conf.tables.TbMinerView(
+        miner_view = TbMinerView(
             miner_id=miner.id,
             name=miner.name,
             columns=columns,
@@ -403,14 +410,14 @@ class MinerManager(object):
 
     def _get_miner(self, miner, session=None):
         sess = session or self.db_conf.sigle_session()
-        tbl = self.db_conf.tables.TbMiner
+        tbl = TbMiner
         r = sess.query(tbl).filter(tbl.id == miner).first()
         if not session:
             sess.close()
         return r
 
     def get_miner(self, miner, session=None):
-        if not isinstance(miner, self.db_conf.tables.TbMiner):
+        if not isinstance(miner, TbMiner):
             if not miner in self.miners:
                 self.miners[miner] = self._get_miner(miner, session)
             return self.miners[miner]
@@ -483,7 +490,7 @@ class MinerManager(object):
             limit_sess_add=self.db_miner.limit_inserts,
         )
 
-        miner_log = self.format_minerlog(self.db_conf.tables.TbMinerLog(), r)
+        miner_log = self.format_minerlog(TbMinerLog(), r)
         miner_log.miner_id = miner.id
         miner_log.finished_execution = True
         miner_log.remark = u'Refresh miner'
