@@ -394,34 +394,31 @@ class TestMinerManager(unittest.TestCase):
         self.mm.save_new_miner('db_1', 'SELECT * FROM tb_client', 'db_1_clients')
 
         miner = self.mm.get_miner(1)
+        miner_id = miner.id
+        table = miner.table_obj
 
         filters = [
-            ('{}.{}'.format(miner.table_obj, 'id'), '>=', 1),
-            ('{}.{}'.format(miner.table_obj, 'id'), '<', 3),
+            ('{}.{}'.format(table, 'id'), '>=', 1),
+            ('{}.{}'.format(table, 'id'), '<', 3),
         ]
 
         result1 = []
-        for row in self.mm.filter(miner.id, filters):
+        for row in self.mm.filter(miner_id, filters):
             result1.append(row)
         self.assertEqual(2, len(result1))
 
 
         filters2 = [
-            ('{}.{}'.format(miner.table_obj, 'name'), 'like', 'maria'),
+            ('{}.{}'.format(table, 'name'), 'like', 'maria'),
         ]
 
         result2 = []
-        for row in self.mm.filter(miner.id, filters2):
+        for row in self.mm.filter(miner_id, filters2):
             result2.append(row)
         self.assertEqual(1, len(result2))
 
-
-        filters2 = [
-            ('{}.{}'.format(miner.table_obj, 'name'), 'like', 'maria'),
-        ]
-
         result3 = []
-        for row in self.mm.filter(miner.id, ('', 'SQL', 'id = 1 OR name LIKE "alice"')):
+        for row in self.mm.filter(miner_id, ('', 'SQL', 'id = 1 OR name LIKE "alice"')):
             result3.append(row)
         self.assertEqual(2, len(result3))
 
