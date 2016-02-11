@@ -293,5 +293,15 @@ class TestMinerManager(unittest.TestCase):
         self.assertEqual({1:u'jhon'}, compare)
 
 
+    def test_get_sql_by_mapping(self):
+        self.create_dbs_test()
+
+        self.mm.save_new_miner('db_1', 'SELECT * FROM tb_client', 'db_1_clients')
+
+        miner1 = self.mm.get_miner(1)
+
+        result = self.mm.get_sql_by_mapping((miner1.id, '__miner1__'), 'SELECT * FROM __miner1__')
+        self.assertEqual('SELECT * FROM {}'.format(miner1.table_name), str(result))
+
 if __name__ == '__main__':
     unittest.main()
