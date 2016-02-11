@@ -229,10 +229,15 @@ class TestMinerManager(unittest.TestCase):
         self.mm.save_new_miner('db_3', 'SELECT * FROM tb_profile', 'db_3_profile')
 
         miner1 = self.mm.get_miner(1)
-        miner2 = self.mm.get_miner(2)
+        tbl1_obj = miner1.table_obj
+        tbl1_name = miner1.table_name
 
-        result = self.mm.join_tables_sql(miner1.table_obj, [
-            ('INNER', '{}.{}'.format(miner2.table_obj, 'client_id'), '=', '{}.{}'.format(miner1.table_obj, 'id')),
+        miner2 = self.mm.get_miner(2)
+        tbl2_obj = miner2.table_obj
+        tbl2_name = miner2.table_name
+
+        result = self.mm.join_tables_sql(tbl1_obj, [
+            ('INNER', '{}.{}'.format(tbl2_obj, 'client_id'), '=', '{}.{}'.format(tbl1_obj, 'id')),
         ])
 
         sql = u'''
@@ -246,7 +251,7 @@ class TestMinerManager(unittest.TestCase):
             FROM {miner1}
             JOIN {miner2} ON
                 {miner2}.client_id = {miner1}.id
-        '''.format(miner1=miner1.table_name, miner2=miner2.table_name)
+        '''.format(miner1=tbl1_name, miner2=tbl2_name)
 
         self.assertEqual(sql.replace('\n', '').replace(' ', ''), result.replace('\n', ' ').replace(' ', ''))
 
