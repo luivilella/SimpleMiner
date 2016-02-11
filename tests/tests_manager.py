@@ -132,6 +132,50 @@ class TestMinerManager(unittest.TestCase):
         self.assertIsNotNone(log)
 
 
+    def test_refresh_miner(self):
+        self.create_dbs_test()
+
+        name = 'db_1_clients'
+        sql = u'''
+            SELECT
+                id,
+                name
+            FROM tb_client
+        '''
+
+        conf_sess = self.db.db_conf.session()
+        q_miner = conf_sess.query(TbMiner)
+        q_miner = q_miner.filter(TbMiner.id == 1)
+
+        self.assertIsNone(q_miner.first())
+
+        self.mm.save_new_miner('db_1', sql, name)
+
+        miner = q_miner.first()
+        self.assertIsNotNone(miner)
+
+        miner_sess = self.db.db_miner.session()
+
+        sql_count = u'''
+            SELECT
+                COUNT(1) AS count
+            FROM {}
+        '''.format(miner.table_name)
+
+        db_1_conn = self.db.db_1.engine.connect()
+        db_1_conn.execute('INSERT INTO tb_client (id, name) VALUES (4, "alan")')
+
+        result1 = miner_sess.execute(sql_count)
+        row1 = result1.fetchone()
+        self.assertIsNotNone(row1)
+        self.assertEqual(3, row1.count)
+
+        self.mm.refresh_miner(1)
+        result2 = miner_sess.execute(sql_count)
+        row2 = result2.fetchone()
+        self.assertIsNotNone(row2)
+        self.assertEqual(4, row2.count)
+
 
 if __name__ == '__main__':
     unittest.main()
