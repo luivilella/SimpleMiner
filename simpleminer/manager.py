@@ -80,7 +80,7 @@ class MinerCore(object):
             'columns_type': columns_type,
         }
 
-    def miner_from_sql(self, sql_sess, sql, miner_table=None, miner_sess=None, limit_sess_add=0, show_process=True):
+    def miner_from_sql(self, sql_sess, sql, miner_table=None, miner_sess=None, limit_sess_add=0, show_process=False):
 
         t1_func = time.time()
 
@@ -352,12 +352,12 @@ class MinerManager(object):
         miner_log.time_sql = (r['time']['end_sql'] - r['time']['start_sql'])
         return miner_log
 
-    def save_new_miner(self, connection, sql, name):
+    def save_new_miner(self, connection, sql, name, show_process=False):
 
         db_sql = self.get_db(connection)
         sql_sess = db_sql.sigle_session()
 
-        r = self.mc.miner_from_sql(sql_sess, sql, limit_sess_add=self.db_miner.limit_inserts)
+        r = self.mc.miner_from_sql(sql_sess, sql, limit_sess_add=self.db_miner.limit_inserts, show_process=show_process)
 
         sess_conf = self.db_conf.sigle_session()
         miner = TbMiner(
@@ -405,8 +405,6 @@ class MinerManager(object):
 
         sess_conf.close()
         sql_sess.close()
-
-        return miner
 
     def _get_miner(self, miner, session=None):
         sess = session or self.db_conf.sigle_session()

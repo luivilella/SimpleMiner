@@ -44,7 +44,7 @@ class TbMiner(Base):
 
     @property
     def columns(self):
-        return json.loads(self.__columns)
+        return json.loads(self.__columns or '{}')
 
     @columns.setter
     def columns(self, value):
@@ -84,7 +84,7 @@ class TbCategory(Base):
 
     @property
     def array_of_ancestors(self):
-        return json.loads(self.__array_of_ancestors)
+        return json.loads(self.__array_of_ancestors or '[]')
 
     @array_of_ancestors.setter
     def array_of_ancestors(self, value):
@@ -122,7 +122,7 @@ class TbMinerView(Base):
 
     @property
     def columns(self):
-        return json.loads(self.__columns)
+        return json.loads(self.__columns or '{}')
 
     @columns.setter
     def columns(self, value):
@@ -130,7 +130,7 @@ class TbMinerView(Base):
 
     @property
     def parameters_saved(self):
-        return json.loads(self.__parameters_saved)
+        return json.loads(self.__parameters_saved or '{}')
 
     @parameters_saved.setter
     def parameters_saved(self, value):
@@ -138,7 +138,7 @@ class TbMinerView(Base):
 
     @property
     def parameters_default(self):
-        return json.loads(self.__parameters_default)
+        return json.loads(self.__parameters_default or '{}')
 
     @parameters_default.setter
     def parameters_default(self, value):
