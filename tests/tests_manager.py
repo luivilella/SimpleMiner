@@ -428,5 +428,9 @@ class TestMinerManager(unittest.TestCase):
         self.assertEqual(2, len(result3))
 
 
+    def test_query(self):
+        pass
+
+
 if __name__ == '__main__':
     unittest.main()

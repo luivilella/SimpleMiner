@@ -420,11 +420,12 @@ class MinerManager(object):
             self.miners[miner] = self._get_miner(miner, session)
         return self.miners[miner]
 
-    def filter(self, miner, filters, as_dict=False):
-
+    def get_miner_table(self, miner):
         miner = self.get_miner(miner)
+        return getattr(self.db_miner.tables, miner.table_obj)
 
-        table = getattr(self.db_miner.tables, miner.table_obj)
+    def filter(self, miner, filters, as_dict=False):
+        table = self.get_miner_table(miner)
         sess = self.db_miner.sigle_session()
         query = self.mc.get_query_filter(filters, sess, table_obj=table)
 
@@ -437,15 +438,10 @@ class MinerManager(object):
         sess.close()
 
     def query(self, miner, filters=None, paginator=None, order_by=None, as_dict=False):
-        if not filters:
-            filters = []
+        filters = filters or []
+        order_by = order_by or []
 
-        if not order_by:
-            order_by = []
-
-        miner = self.get_miner(miner)
-
-        table = getattr(self.db_miner.tables, miner.table_obj)
+        table = self.get_miner_table(miner)
         sess = self.db_miner.sigle_session()
         query = self.mc.get_query_filter(filters, sess, table_obj=table)
 
@@ -473,7 +469,7 @@ class MinerManager(object):
         sql_sess = sql_db.sigle_session()
 
         table = {
-            'class': getattr(self.db_miner.tables, miner.table_obj),
+            'class': self.get_miner_table(miner),
             'columns': miner.columns['columns_order'],
         }
 
