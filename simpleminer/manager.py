@@ -334,8 +334,6 @@ class MinerManager(object):
         sess_conf.commit()
         sess_conf.close()
 
-        return connection
-
     def get_db(self, connection):
         conn = self.get_connection(connection)
         if not hasattr(self.dbaggregator, conn.slug):

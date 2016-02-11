@@ -16,6 +16,7 @@ dbs = {
     'db_miner': 'config/test_miner.db',
     'db_1': 'config/test_db_1.db',
     'db_2': 'config/test_db_2.db',
+    'db_3': 'config/test_db_3.db',
 }
 sqlite = 'sqlite:///{}'
 
@@ -52,8 +53,7 @@ class TestMinerManager(unittest.TestCase):
 
         self.assertIsNone(q.first())
 
-        conn = self.mm.save_new_connection(name, str_conn, slug)
-        self.assertTrue(isinstance(conn, TbConnection))
+        self.mm.save_new_connection(name, str_conn, slug)
 
         self.assertIsNotNone(q.first())
 
@@ -73,6 +73,12 @@ class TestMinerManager(unittest.TestCase):
         db_2_conn.execute('INSERT INTO tb_sales (id, client_id) VALUES (3, 2)')
         self.mm.save_new_connection('DB2 test', sqlite.format(dbs['db_2']), 'db_2')
 
+        db_3_conn = self.db.db_3.engine.connect()
+        db_3_conn.execute(u'''
+            CREATE TABLE tb_profile (id INTEGER PRIMARY KEY, client_id INTEGER, key VARCHAR(255), value TEXT)
+        ''')
+        db_3_conn.execute('INSERT INTO tb_profile (id, client_id, key, value) VALUES (1, 2, "email_checked", "1")')
+        self.mm.save_new_connection('DB3 test', sqlite.format(dbs['db_3']), 'db_3')
 
     def test_save_new_miner(self):
         self.create_dbs_test()
@@ -176,6 +182,38 @@ class TestMinerManager(unittest.TestCase):
         self.assertIsNotNone(row2)
         self.assertEqual(4, row2.count)
 
+
+
+    def test_join_tables(self):
+        self.create_dbs_test()
+
+        self.mm.save_new_miner('db_1', 'SELECT * FROM tb_client', 'db_1_clients')
+        self.mm.save_new_miner('db_2', 'SELECT * FROM tb_sales', 'db_2_sales')
+        self.mm.save_new_miner('db_3', 'SELECT * FROM tb_profile', 'db_3_profile')
+
+        miner1 = self.mm.get_miner(1)
+        miner2 = self.mm.get_miner(2)
+
+        result = self.mm.join_tables(miner1.table_obj, [
+            ('INNER', '{}.{}'.format(miner2.table_obj, 'client_id'), '=', '{}.{}'.format(miner1.table_obj, 'id')),
+        ], True)
+
+        compare = set()
+        for row in result:
+            compare.add('client_id:{} name:{} sale_id:{}'.format(
+                row['{}.id'.format(miner1.table_obj)],
+                row['{}.name'.format(miner1.table_obj)],
+                row['{}.id'.format(miner2.table_obj)],
+            ))
+
+        self.assertEqual(
+            set([
+                'client_id:2 name:alice sale_id:3',
+                'client_id:1 name:jhon sale_id:2',
+                'client_id:1 name:jhon sale_id:1',
+            ]),
+            compare
+        )
 
 if __name__ == '__main__':
     unittest.main()
