@@ -286,7 +286,7 @@ class MinerManager(object):
 
             config_parser = SafeConfigParser()
             config_parser.read(['config/miner-db.ini',])
-            db_miner_conf = dict(config_parser.items('dbs'))
+            db_miner_conf = dict(config_parser.items('miner-dbs'))
 
             if not db_conf:
                 self.dbaggregator.add('db_conf', db_miner_conf['db_configs'])
@@ -302,21 +302,22 @@ class MinerManager(object):
         self.mc = MinerCore(self.db_miner)
 
     def get_connection(self, connection):
-        if not isinstance(connection, TbConnection):
-            if not connection in self.connections:
-                sess = self.db_conf.sigle_session()
-                tbl = TbConnection
-                q = sess.query(tbl)
-                if str(connection).isdigit():
-                    q = q.filter(tbl.id == connection)
-                else:
-                    q = q.filter(tbl.slug == connection)
+        if isinstance(connection, TbConnection):
+            return connection
 
-                self.connections[connection] = q.first()
-                sess.close()
+        if not connection in self.connections:
+            sess = self.db_conf.sigle_session()
+            tbl = TbConnection
+            q = sess.query(tbl)
+            if str(connection).isdigit():
+                q = q.filter(tbl.id == connection)
+            else:
+                q = q.filter(tbl.slug == connection)
 
-            return self.connections[connection]
-        return connection
+            self.connections[connection] = q.first()
+            sess.close()
+
+        return self.connections[connection]
 
     def save_new_connection(self, name, str_conn, slug=None):
 

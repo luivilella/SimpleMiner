@@ -1,9 +1,10 @@
 # coding: utf8
 import os
 import unittest
-from simpleminer.manager import MinerManager
+from simpleminer.manager import MinerManager, MinerCore
 from simpleminer.models import create_tables
 from dbaggregator import DBAggregator
+from dbaggregator.dbaggregator import DB
 from simpleminer.models import (
     TbConnection,
     TbMiner,
@@ -302,6 +303,59 @@ class TestMinerManager(unittest.TestCase):
 
         result = self.mm.get_sql_by_mapping((miner1.id, '__miner1__'), 'SELECT * FROM __miner1__')
         self.assertEqual('SELECT * FROM {}'.format(miner1.table_name), str(result))
+
+
+    def  test___init__(self):
+        mm = MinerManager()
+
+        self.assertTrue(hasattr(mm, 'db_conf'))
+        self.assertTrue(isinstance(mm.db_conf, DB))
+
+        self.assertTrue(hasattr(mm, 'db_miner'))
+        self.assertTrue(isinstance(mm.db_miner, DB))
+
+        self.assertTrue(hasattr(mm, 'connections'))
+        self.assertTrue(isinstance(mm.connections, dict))
+
+        self.assertTrue(hasattr(mm, 'miners'))
+        self.assertTrue(isinstance(mm.miners, dict))
+
+        self.assertTrue(hasattr(mm, 'mc'))
+        self.assertTrue(isinstance(mm.mc, MinerCore))
+
+        self.assertEqual(self.db.db_conf, self.mm.db_conf)
+        self.assertEqual(self.db.db_miner, self.mm.db_miner)
+
+
+    def  test_get_connection(self):
+        db_name = 'DB test'
+        db_conn = 'postgresql+psycopg2://usr:123change@127.0.0.1:5432/localdb'
+        db_slug = 'psql1'
+
+        self.mm.save_new_connection(db_name, db_conn, db_slug)
+
+        self.assertEqual(0, len(self.mm.connections))
+
+        conn_slug = self.mm.get_connection(db_slug)
+
+        self.assertEqual(1, len(self.mm.connections))
+
+        self.assertEqual(db_name, conn_slug.name)
+        self.assertEqual(db_conn, conn_slug.string)
+
+        conn_id = self.mm.get_connection(1)
+
+        self.assertEqual(2, len(self.mm.connections))
+
+        self.assertEqual(db_name, conn_id.name)
+        self.assertEqual(db_conn, conn_id.string)
+        self.assertEqual(db_slug, conn_id.slug)
+
+        self.mm.get_connection(db_slug)
+        self.mm.get_connection(1)
+
+        self.assertEqual(2, len(self.mm.connections))
+
 
 if __name__ == '__main__':
     unittest.main()
