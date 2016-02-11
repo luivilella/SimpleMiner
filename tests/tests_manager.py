@@ -18,6 +18,7 @@ dbs = {
     'db_1': 'config/test_db_1.db',
     'db_2': 'config/test_db_2.db',
     'db_3': 'config/test_db_3.db',
+    'db_4': 'config/test_db_4.db',
 }
 sqlite = 'sqlite:///{}'
 
@@ -28,11 +29,6 @@ class TestMinerManager(unittest.TestCase):
         db = DBAggregator()
 
         for db_name, db_path in dbs.iteritems():
-            try:
-                os.remove(os.path.abspath(db_path))
-            except OSError:
-                pass
-
             db.add(db_name, sqlite.format(db_path))
 
         create_tables(db.db_conf.engine)
@@ -41,22 +37,12 @@ class TestMinerManager(unittest.TestCase):
         self.db = db
 
 
-    def test_save_new_connection(self):
-        name = 'SQLite Test1'
-        str_conn = sqlite.format('config/db_configs.db')
-        slug = 'test_connection'
-
-        sess = self.db.db_conf.session()
-        q = sess.query(TbConnection)
-        q = q.filter(TbConnection.name == name)
-        q = q.filter(TbConnection.string == str_conn)
-        q = q.filter(TbConnection.slug == slug)
-
-        self.assertIsNone(q.first())
-
-        self.mm.save_new_connection(name, str_conn, slug)
-
-        self.assertIsNotNone(q.first())
+    def tearDown(self):
+        for db_path in dbs.itervalues():
+            try:
+                os.remove(os.path.abspath(db_path))
+            except OSError:
+                pass
 
 
     def create_dbs_test(self):
@@ -80,6 +66,25 @@ class TestMinerManager(unittest.TestCase):
         ''')
         db_3_conn.execute('INSERT INTO tb_profile (id, client_id, key, value) VALUES (1, 2, "email_checked", "1")')
         self.mm.save_new_connection('DB3 test', sqlite.format(dbs['db_3']), 'db_3')
+
+
+    def test_save_new_connection(self):
+        name = 'SQLite Test1'
+        str_conn = sqlite.format('config/db_configs.db')
+        slug = 'test_connection'
+
+        sess = self.db.db_conf.session()
+        q = sess.query(TbConnection)
+        q = q.filter(TbConnection.name == name)
+        q = q.filter(TbConnection.string == str_conn)
+        q = q.filter(TbConnection.slug == slug)
+
+        self.assertIsNone(q.first())
+
+        self.mm.save_new_connection(name, str_conn, slug)
+
+        self.assertIsNotNone(q.first())
+
 
     def test_save_new_miner(self):
         self.create_dbs_test()
@@ -355,6 +360,70 @@ class TestMinerManager(unittest.TestCase):
         self.mm.get_connection(1)
 
         self.assertEqual(2, len(self.mm.connections))
+
+
+    def  test_get_db(self):
+        db_slug = 'db_4'
+        self.mm.save_new_connection('DB4 test', sqlite.format(dbs['db_4']), db_slug)
+
+        db_4 = self.mm.get_db(1)
+        self.assertTrue(isinstance(db_4, DB))
+        self.assertTrue(hasattr(self.mm.dbaggregator, db_slug))
+
+
+    def test_get_miner(self):
+        self.create_dbs_test()
+        self.mm.save_new_miner('db_1', 'SELECT * FROM tb_client', 'db_1_clients')
+
+        self.assertEqual(0, len(self.mm.miners))
+
+        miner = self.mm.get_miner(1)
+
+        self.assertEqual(1, len(self.mm.miners))
+        self.assertTrue(isinstance(miner, TbMiner))
+
+        self.mm.save_new_miner('db_1', 'SELECT * FROM tb_client WHERE id = 2', 'db_1_clients2')
+
+        self.assertEqual(1, len(self.mm.miners))
+        self.mm.get_miner(2)
+        self.assertEqual(2, len(self.mm.miners))
+
+
+    def test_filter(self):
+        self.create_dbs_test()
+        self.mm.save_new_miner('db_1', 'SELECT * FROM tb_client', 'db_1_clients')
+
+        miner = self.mm.get_miner(1)
+
+        filters = [
+            ('{}.{}'.format(miner.table_obj, 'id'), '>=', 1),
+            ('{}.{}'.format(miner.table_obj, 'id'), '<', 3),
+        ]
+
+        result1 = []
+        for row in self.mm.filter(miner.id, filters):
+            result1.append(row)
+        self.assertEqual(2, len(result1))
+
+
+        filters2 = [
+            ('{}.{}'.format(miner.table_obj, 'name'), 'like', 'maria'),
+        ]
+
+        result2 = []
+        for row in self.mm.filter(miner.id, filters2):
+            result2.append(row)
+        self.assertEqual(1, len(result2))
+
+
+        filters2 = [
+            ('{}.{}'.format(miner.table_obj, 'name'), 'like', 'maria'),
+        ]
+
+        result3 = []
+        for row in self.mm.filter(miner.id, ('', 'SQL', 'id = 1 OR name LIKE "alice"')):
+            result3.append(row)
+        self.assertEqual(2, len(result3))
 
 
 if __name__ == '__main__':

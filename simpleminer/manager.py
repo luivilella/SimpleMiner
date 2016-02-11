@@ -407,18 +407,18 @@ class MinerManager(object):
 
     def _get_miner(self, miner, session=None):
         sess = session or self.db_conf.sigle_session()
-        tbl = TbMiner
-        r = sess.query(tbl).filter(tbl.id == miner).first()
+        r = sess.query(TbMiner).filter(TbMiner.id == miner).first()
         if not session:
             sess.close()
         return r
 
     def get_miner(self, miner, session=None):
-        if not isinstance(miner, TbMiner):
-            if not miner in self.miners:
-                self.miners[miner] = self._get_miner(miner, session)
-            return self.miners[miner]
-        return miner
+        if isinstance(miner, TbMiner):
+            return miner
+
+        if not miner in self.miners:
+            self.miners[miner] = self._get_miner(miner, session)
+        return self.miners[miner]
 
     def filter(self, miner, filters, as_dict=False):
 
