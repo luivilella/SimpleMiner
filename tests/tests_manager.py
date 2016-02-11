@@ -183,7 +183,6 @@ class TestMinerManager(unittest.TestCase):
         self.assertEqual(4, row2.count)
 
 
-
     def test_join_tables(self):
         self.create_dbs_test()
 
@@ -214,6 +213,85 @@ class TestMinerManager(unittest.TestCase):
             ]),
             compare
         )
+
+
+    def test_join_tables_sql(self):
+        self.create_dbs_test()
+
+        self.mm.save_new_miner('db_1', 'SELECT * FROM tb_client', 'db_1_clients')
+        self.mm.save_new_miner('db_2', 'SELECT * FROM tb_sales', 'db_2_sales')
+        self.mm.save_new_miner('db_3', 'SELECT * FROM tb_profile', 'db_3_profile')
+
+        miner1 = self.mm.get_miner(1)
+        miner2 = self.mm.get_miner(2)
+
+        result = self.mm.join_tables_sql(miner1.table_obj, [
+            ('INNER', '{}.{}'.format(miner2.table_obj, 'client_id'), '=', '{}.{}'.format(miner1.table_obj, 'id')),
+        ])
+
+        sql = u'''
+            SELECT
+                {miner1}.tbl_id AS {miner1}_tbl_id
+                ,{miner1}.id AS {miner1}_id
+                ,{miner1}.name AS {miner1}_name
+                ,{miner2}.tbl_id AS {miner2}_tbl_id
+                ,{miner2}.id AS {miner2}_id
+                ,{miner2}.client_id AS {miner2}_client_id
+            FROM {miner1}
+            JOIN {miner2} ON
+                {miner2}.client_id = {miner1}.id
+        '''.format(miner1=miner1.table_name, miner2=miner2.table_name)
+
+        self.assertEqual(sql.replace('\n', '').replace(' ', ''), result.replace('\n', ' ').replace(' ', ''))
+
+
+    def test_sql_custom(self):
+        self.create_dbs_test()
+
+        self.mm.save_new_miner('db_1', 'SELECT * FROM tb_client', 'db_1_clients')
+        self.mm.save_new_miner('db_2', 'SELECT * FROM tb_sales', 'db_2_sales')
+        self.mm.save_new_miner('db_3', 'SELECT * FROM tb_profile', 'db_3_profile')
+
+        miner1 = self.mm.get_miner(1)
+        miner2 = self.mm.get_miner(2)
+        miner3 = self.mm.get_miner(3)
+
+        sql = u'''
+            SELECT
+                client.id
+                ,client.name
+            FROM __miner1__ AS client
+            INNER JOIN __miner2__ AS sales ON (
+                sales.client_id = client.id
+            )
+            LEFT JOIN __miner3__ AS profile ON (
+                    profile.client_id = client.id
+                AND profile.key = 'email_checked'
+                AND profile.value = '1'
+            )
+            WHERE
+                profile.id IS NULL
+            GROUP BY
+                client.id
+                ,client.name
+            ORDER BY
+                client.id
+        '''
+
+        mapping = [
+            (miner1.id, '__miner1__'),
+            (miner2.id, '__miner2__'),
+            (miner3.id, '__miner3__'),
+        ]
+
+        result = self.mm.sql_custom(mapping, sql)
+
+        compare = {}
+        for row in result:
+            compare[row.id] = row.name
+
+        self.assertEqual({1:u'jhon'}, compare)
+
 
 if __name__ == '__main__':
     unittest.main()
