@@ -1,2 +1,4 @@
 tqdm==3.8.0
+bottle==0.12.9
+pymongo==3.2.1
 git+https://github.com/luivilella/dbaggregator.git
