@@ -26,6 +26,10 @@ class TestMinerManager(unittest.TestCase):
 
 
     def setUp(self):
+
+        if not os.path.exists('config/'):
+            os.makedirs('config/')
+
         db = DBAggregator()
 
         for db_name, db_path in dbs.iteritems():
@@ -316,7 +320,7 @@ class TestMinerManager(unittest.TestCase):
 
 
     def  test___init__(self):
-        mm = MinerManager()
+        mm = MinerManager(db_ini='templates/miner-db.ini')
 
         self.assertTrue(hasattr(mm, 'db_conf'))
         self.assertTrue(isinstance(mm.db_conf, DB))

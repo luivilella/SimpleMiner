@@ -236,4 +236,4 @@ def miner_view(miner_view):
 
 
 if __name__ == '__main__':
-    bottle.run(host='0.0.0.0', port=8070, reloader=True, debug=True)
+    bottle.run(host='0.0.0.0', port=8070, debug=True)

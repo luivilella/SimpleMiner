@@ -278,14 +278,14 @@ class MinerCore(object):
 
 class MinerManager(object):
     """docstring for MinerManager"""
-    def __init__(self, db_conf=None, db_miner=None, dbaggregator=None):
+    def __init__(self, db_conf=None, db_miner=None, dbaggregator=None, db_ini='config/miner-db.ini'):
 
         self.dbaggregator = dbaggregator or DBAggregator()
 
         if not db_conf or not db_miner:
 
             config_parser = SafeConfigParser()
-            config_parser.read(['config/miner-db.ini',])
+            config_parser.read([db_ini,])
             db_miner_conf = dict(config_parser.items('miner-dbs'))
 
             if not db_conf:
