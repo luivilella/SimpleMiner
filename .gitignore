@@ -63,3 +63,8 @@ target/
 
 #Project
 config/
+frontend/node_modules/
+frontend/.vscode/
+frontend/typings/
+frontend/app/**/*.js
+frontend/app/**/*.map
