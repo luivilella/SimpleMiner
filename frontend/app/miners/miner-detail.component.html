@@ -1,0 +1,22 @@
+<div *ngIf='miner'>
+    <h3>Name: {{miner.name}}</h3>
+
+    <div class='table-responsive'>
+        <table class='table' *ngIf='showTable()'>
+            <thead>
+                <tr>
+                    <th *ngFor='#fieldId of getTableColumns()'>
+                        {{getColumnConf(fieldId).exhibitionName}}
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor='#row of tableRows'>
+                    <td *ngFor='#fieldId of getTableColumns()'>
+                        {{getRowValue(row, fieldId)}}
+                    </td>                    
+                </tr>
+            </tbody>
+        </table>
+    </div>        
+</div>
