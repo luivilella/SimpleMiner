@@ -22,18 +22,15 @@
         "limit": null
     },
 
-    "filtersSaved": [
+    "savedFilters": [
         {
             "fieldId": "@m1.client_id",
             "operator": "="
         }
     ],
 
-    "filtersAvaliable": [
-        {
-            "fieldId": "@m1.client_id",
-            "operator": null
-        }
+    "avaliableFilters": [
+        "@m1.client_id"
     ],
 
     "minerColumns": {

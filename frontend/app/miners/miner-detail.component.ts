@@ -1,11 +1,15 @@
 import { Component, OnChanges, Input } from 'angular2/core';
 
-import { IMiner, IColumnConf } from './miner';
+import { IMiner, IColumnConf, IFilterConf } from './miner';
 import { MinerService } from './miner.service';
+import { FieldFilterComponent } from './field-filter.component';
 
 @Component({
     selector: 'sm-miner-detail',
     templateUrl: 'app/miners/miner-detail.component.html',
+    directives: [
+        FieldFilterComponent,
+    ]     
 })
 export class MinerDetailComponent implements OnChanges {
     @Input() miner_to_find: string;
@@ -45,8 +49,8 @@ export class MinerDetailComponent implements OnChanges {
         return true;
     }
     
-    getColumnConf(column): IColumnConf{
-        return this.miner.minerColumns.columnsConf[column];
+    getColumnConf(fieldId): IColumnConf{
+        return this.miner.minerColumns.columnsConf[fieldId];
     }
 
     getTableColumns(): string[]{
@@ -68,6 +72,14 @@ export class MinerDetailComponent implements OnChanges {
     ngOnChanges(): void {
         this.getMiner();
         this.getTableRows();
+    }
+
+    getSavedFilters(): IFilterConf[]{
+        return this.miner.savedFilters;
+    }
+
+    getAvaliableFilters(): string[]{
+        return this.miner.avaliableFilters;
     }
 
 }

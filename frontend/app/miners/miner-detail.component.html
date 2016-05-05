@@ -1,5 +1,20 @@
 <div *ngIf='miner'>
+    
     <h3>Name: {{miner.name}}</h3>
+    
+    <div >
+        <div *ngFor='#filter of getSavedFilters()'>
+            <sm-field-filter 
+                [fieldId]='filter.fieldId'
+                [operator]='filter.operator'
+                [name]='getColumnConf(filter.fieldId).name'
+                [type]='getColumnConf(filter.fieldId).type'
+                [exhibitionName]='getColumnConf(filter.fieldId).exhibitionName'
+                [helpText]='getColumnConf(filter.fieldId).helpText'
+            ></sm-field-filter>
+        </div>
+   </div>
+
 
     <div class='table-responsive'>
         <table class='table' *ngIf='showTable()'>

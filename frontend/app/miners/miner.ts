@@ -37,8 +37,8 @@ export interface IMiner {
     slug: string;
     remark: string;
     appliedParameters: IFilter;
-    filtersSaved: IFilterConf[];
-    filtersAvaliable: IFilterConf[];
+    savedFilters: IFilterConf[];
+    avaliableFilters: string[];
     minerColumns: {
         columnsOrder: string[];
         columnsConf: { [id: string]: IColumnConf };
