@@ -4,10 +4,10 @@ import bottle
 import sqlalchemy as sa
 from bson import json_util
 from simpleminer.manager import MinerManager
+from simpleminer import models as tbl
 
 mm = MinerManager()
 db = mm.dbaggregator
-tbl = db.db_conf.tables
 
 def dict_to_list(d, keys=None):
     for k, v in d.iteritems():
