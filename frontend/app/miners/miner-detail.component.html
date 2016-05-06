@@ -11,11 +11,19 @@
                 [type]='getColumnConf(filter.fieldId).type'
                 [exhibitionName]='getColumnConf(filter.fieldId).exhibitionName'
                 [helpText]='getColumnConf(filter.fieldId).helpText'
+                
+                (onChange)='setFilter($event)'
             ></sm-field-filter>
         </div>
    </div>
-
-
+   
+   Filter to Find
+    <div>
+        <div *ngFor='#filter of filters'>
+            {{filter.fieldId}} {{filter.operator}} {{filter.value}}
+        </div>
+   </div>
+   
     <div class='table-responsive'>
         <table class='table' *ngIf='showTable()'>
             <thead>

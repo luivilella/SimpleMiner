@@ -26,7 +26,15 @@
         {
             "fieldId": "@m1.client_id",
             "operator": "="
-        }
+        },
+        {
+            "fieldId": "@m1.name",
+            "operator": "like"
+        },
+        {
+            "fieldId": "@m1.name",
+            "operator": "="
+        }        
     ],
 
     "avaliableFilters": [

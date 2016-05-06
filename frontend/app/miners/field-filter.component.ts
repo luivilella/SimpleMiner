@@ -1,6 +1,6 @@
-import { Component, OnChanges, Input, Output } from 'angular2/core';
+import { Component, OnChanges, Input, Output, EventEmitter } from 'angular2/core';
 
-import { IMiner, IColumnConf, IFilterConf, IFieldFilter } from './miner';
+import { IColumnConf, IFilterConf, IFieldFilter } from './miner';
 
 interface IFieldFilterComponent extends OnChanges, IColumnConf, IFilterConf, IFieldFilter {    
 }
@@ -18,9 +18,26 @@ export class FieldFilterComponent implements IFieldFilterComponent {
     @Input() exhibitionName: string;
     @Input() helpText: string;
     @Input() value: string;
-    @Input() forced: boolean;
-         
+    @Input() forced: boolean = false;
+
+    @Output() onChange: EventEmitter<IFieldFilter> = new EventEmitter<IFieldFilter>(); 
+
+    filter: IFieldFilter = <IFieldFilter>{};
+
     ngOnChanges(): void {
+        this.fieldChanged();
+    }
+
+    setFilter(): void{
+        this.filter.fieldId = this.fieldId;        
+        this.filter.operator = this.operator;        
+        this.filter.value = this.value;
+        this.filter.forced = this.forced;
+    }
+    
+    fieldChanged(): void{
+        this.setFilter();
+        this.onChange.emit(this.filter);
     }
 
 }

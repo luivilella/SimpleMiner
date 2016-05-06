@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input } from 'angular2/core';
 
-import { IMiner, IColumnConf, IFilterConf } from './miner';
+import { IMiner, IColumnConf, IFilterConf, IFieldFilter } from './miner';
 import { MinerService } from './miner.service';
 import { FieldFilterComponent } from './field-filter.component';
 
@@ -9,7 +9,7 @@ import { FieldFilterComponent } from './field-filter.component';
     templateUrl: 'app/miners/miner-detail.component.html',
     directives: [
         FieldFilterComponent,
-    ]     
+    ]
 })
 export class MinerDetailComponent implements OnChanges {
     @Input() miner_to_find: string;
@@ -17,6 +17,9 @@ export class MinerDetailComponent implements OnChanges {
     miner: IMiner;
     tableRows: any[];
     errorMessage: string;
+    filters: IFieldFilter[];
+
+    private _filters: { [id: string]: IFieldFilter } = {};
 
     constructor(private _minerService: MinerService) {
     }
@@ -48,7 +51,7 @@ export class MinerDetailComponent implements OnChanges {
         }
         return true;
     }
-    
+
     getColumnConf(fieldId): IColumnConf{
         return this.miner.minerColumns.columnsConf[fieldId];
     }
@@ -62,7 +65,7 @@ export class MinerDetailComponent implements OnChanges {
         ).subscribe(
             rows => this.tableRows = rows,
             error =>  this.errorMessage = <any>error
-        );        
+        );
     }
 
     getRowValue(row: any, fieldId: string): any{
@@ -80,6 +83,23 @@ export class MinerDetailComponent implements OnChanges {
 
     getAvaliableFilters(): string[]{
         return this.miner.avaliableFilters;
+    }
+
+    setFilter(filter: IFieldFilter): void{
+        let key = filter.fieldId + filter.operator;
+        this._filters[key] = filter;
+        this.refreshFilters();
+    }
+
+    refreshFilters(): void{
+        let ret: IFieldFilter[] = [];
+        for (let key in this._filters) {
+            let f = this._filters[key];
+            if (f.value){
+                ret.push(f);
+            }
+        }
+        this.filters = ret;
     }
 
 }
