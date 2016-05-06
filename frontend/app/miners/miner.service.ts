@@ -6,13 +6,13 @@ import { IMiner, IFilter } from './miner';
 
 @Injectable()
 export class MinerService {
-    
+
     private _baseUrl = 'api/miners/';
-    
+
     constructor(private _http: Http) { }
 
     getMiner(miner: string): Observable<IMiner> {
-        let url = 'miner.json'; 
+        let url = 'miner.json';
         return this._http.get(
             this._baseUrl + url
         ).map(
@@ -21,12 +21,12 @@ export class MinerService {
             data => console.log('All: ' +  JSON.stringify(data))
         ).catch(
             this.handleError
-        );                
+        );
     }
 
 
-    filterMiner(): Observable<any[]> {
-        let url = 'miner-rows.json'; 
+    filterMiner(params: IFilter): Observable<any[]> {
+        let url = 'miner-rows.json';
         return this._http.get(
             this._baseUrl + url
         ).map(
@@ -35,7 +35,7 @@ export class MinerService {
             data => console.log('All: ' +  JSON.stringify(data))
         ).catch(
             this.handleError
-        ); 
+        );
     }
 
 

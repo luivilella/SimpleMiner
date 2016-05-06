@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input } from 'angular2/core';
 
-import { IMiner, IColumnConf, IFilterConf, IFieldFilter } from './miner';
+import { IMiner, IColumnConf, IFilterConf, IFieldFilter, IFilter } from './miner';
 import { MinerService } from './miner.service';
 import { FieldFilterComponent } from './field-filter.component';
 
@@ -19,6 +19,7 @@ export class MinerDetailComponent implements OnChanges {
     errorMessage: string;
     filters: IFieldFilter[];
 
+    private _searchParams: IFilter = <IFilter>{};
     private _filters: { [id: string]: IFieldFilter } = {};
 
     constructor(private _minerService: MinerService) {
@@ -60,8 +61,14 @@ export class MinerDetailComponent implements OnChanges {
         return this.miner.minerColumns.columnsOrder;
     }
 
+    prepareSearchParams(): void{
+        this._searchParams.filters = this.filters;
+    }
+
     getTableRows(): void{
+        this.prepareSearchParams();
         this._minerService.filterMiner(
+            this._searchParams
         ).subscribe(
             rows => this.tableRows = rows,
             error =>  this.errorMessage = <any>error

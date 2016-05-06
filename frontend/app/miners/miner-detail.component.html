@@ -1,29 +1,29 @@
 <div *ngIf='miner'>
-    
+
     <h3>Name: {{miner.name}}</h3>
-    
+
     <div >
         <div *ngFor='#filter of getSavedFilters()'>
-            <sm-field-filter 
+            <sm-field-filter
                 [fieldId]='filter.fieldId'
                 [operator]='filter.operator'
                 [name]='getColumnConf(filter.fieldId).name'
                 [type]='getColumnConf(filter.fieldId).type'
                 [exhibitionName]='getColumnConf(filter.fieldId).exhibitionName'
                 [helpText]='getColumnConf(filter.fieldId).helpText'
-                
+
                 (onChange)='setFilter($event)'
             ></sm-field-filter>
         </div>
    </div>
-   
-   Filter to Find
+
+   Search Filters
     <div>
         <div *ngFor='#filter of filters'>
             {{filter.fieldId}} {{filter.operator}} {{filter.value}}
         </div>
    </div>
-   
+
     <div class='table-responsive'>
         <table class='table' *ngIf='showTable()'>
             <thead>
@@ -37,9 +37,9 @@
                 <tr *ngFor='#row of tableRows'>
                     <td *ngFor='#fieldId of getTableColumns()'>
                         {{getRowValue(row, fieldId)}}
-                    </td>                    
+                    </td>
                 </tr>
             </tbody>
         </table>
-    </div>        
+    </div>
 </div>
