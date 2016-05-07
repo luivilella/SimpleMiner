@@ -9,7 +9,7 @@ import { MinerTableComponent } from './table/miner-table.component';
 import { MinerSearchComponent } from './search/miner-search.component';
 
 @Component({
-    selector: 'sm-miner-detail',
+    selector: 'sm-miner',
     templateUrl: 'app/miners/miner/miner.component.html',
     directives: [
         MinerTableComponent,
