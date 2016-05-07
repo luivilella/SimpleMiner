@@ -23,7 +23,7 @@
             >{{filter.exhibitionName}}</option>
         </select>
 
-        <select *ngIf='getNewFieldOperators() && getNewFieldOperators().length'
+        <select *ngIf='getNewFieldOperators().length'
             [(ngModel)]='new_filter.operator'
         >
             <option *ngFor='#operator of getNewFieldOperators()'
@@ -43,4 +43,5 @@
         </div>
     </div>
 
+    <button (click)='search()'> Applay Filters </button>
 

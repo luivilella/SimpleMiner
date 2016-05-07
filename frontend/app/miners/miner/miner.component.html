@@ -4,10 +4,10 @@
 
     <sm-miner-search
         [miner]='miner'
+        (onSearch)='search($event)'
     ></sm-miner-search>
 
     <sm-miner-table
         [miner]='miner' [tableRows]='minerRows'
     ></sm-miner-table>
-
 </div>

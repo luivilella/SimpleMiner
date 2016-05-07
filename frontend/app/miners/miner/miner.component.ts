@@ -1,6 +1,6 @@
 import { Component, OnChanges, Input } from 'angular2/core';
 
-import { IMiner, IFilter } from './miner';
+import { IMiner, IFilter, IField } from './miner';
 
 import { MinerService } from './miner.service';
 import { MinerUtilsService } from './miner-utils.service';
@@ -26,7 +26,7 @@ export class MinerComponent implements OnChanges {
     miner: IMiner;
     minerRows: any[];
     errorMessage: string;
-
+    filters: IField[];
 
     constructor(private _minerService: MinerService) {
     }
@@ -66,4 +66,8 @@ export class MinerComponent implements OnChanges {
         return searchParams;
     }
 
+    search(filters: IField[]): void{
+        this.filters = filters;
+        this.getRows();
+    }
 }

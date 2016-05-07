@@ -1,4 +1,4 @@
-import { Component, OnChanges, Input } from 'angular2/core';
+import { Component, OnChanges, Input, Output, EventEmitter} from 'angular2/core';
 
 import { IMiner, IField, IColumnConf } from '../miner';
 import { MinerUtilsService } from '../miner-utils.service';
@@ -14,6 +14,7 @@ import { FieldFilterComponent } from './field-filter.component';
 export class MinerSearchComponent implements OnChanges {
 
     @Input() miner: IMiner;
+    @Output() onSearch: EventEmitter<IField[]> = new EventEmitter<IField[]>();
 
     filters: IField[];
     avaliableFilters: IField[];
@@ -129,4 +130,7 @@ export class MinerSearchComponent implements OnChanges {
         this.filters = ret;
     }
 
+    search():void{
+        this.onSearch.emit(this.filters);
+    }
 }
