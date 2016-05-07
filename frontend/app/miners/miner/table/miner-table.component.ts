@@ -1,6 +1,7 @@
 import { Component, OnChanges, Input } from 'angular2/core';
 
 import { IMiner, IColumnConf } from '../miner';
+import { MinerUtilsService } from '../miner-utils.service';
 
 @Component({
     selector: 'sm-miner-table',
@@ -14,7 +15,11 @@ export class MinerTableComponent implements OnChanges {
     showTable: boolean = false;
     tableColumns: IColumnConf[];
 
+    constructor(private _minerUtils: MinerUtilsService) {
+    }
+
     ngOnChanges(): void {
+        this._minerUtils.setMiner(this.miner);
         this.loadTableColumns();
         this.showTable = this._showTable();
     }
@@ -23,7 +28,7 @@ export class MinerTableComponent implements OnChanges {
         let tableColumns: IColumnConf[] = <IColumnConf[]>[];
         for(let idx in this.miner.minerColumns.columnsOrder){
             let fieldId = this.miner.minerColumns.columnsOrder[idx];
-            tableColumns.push(this.getColumnConf(fieldId));
+            tableColumns.push(this._minerUtils.getColumnConf(fieldId));
         }
         this.tableColumns = tableColumns;
     }
@@ -45,10 +50,6 @@ export class MinerTableComponent implements OnChanges {
             return false;
         }
         return true;
-    }
-
-    getColumnConf(fieldId: string): IColumnConf{
-        return this.miner.minerColumns.columnsConf[fieldId];
     }
 
     getRowValue(row: any, fieldId: string): any{

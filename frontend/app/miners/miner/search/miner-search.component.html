@@ -1,0 +1,21 @@
+    Saved Filters
+    <div >
+        <div *ngFor='#filter of filters'>
+
+            <sm-field-filter
+                [field]='filter'
+                (onChange)='setFilter($event)'
+            ></sm-field-filter>
+
+        </div>
+    </div>
+
+    Add custom filters
+
+
+    Search Filters
+    <div>
+        <div *ngFor='#filter of filters'>
+            {{filter.fieldId}} {{filter.operator}} {{filter.value}}
+        </div>
+    </div>
