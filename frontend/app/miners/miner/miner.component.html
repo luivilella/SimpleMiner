@@ -1,0 +1,31 @@
+<div *ngIf='miner'>
+
+    <h3>Name: {{miner.name}}</h3>
+
+    Saved Filters
+    <div >
+        <div *ngFor='#filter of filters'>
+
+            <sm-field-filter
+                [field]='filter' (onChange)='setFilter($event)'
+            ></sm-field-filter>
+
+        </div>
+    </div>
+
+    Add custom filters
+
+
+    Search Filters
+    <div>
+        <div *ngFor='#filter of filters'>
+            {{filter.fieldId}} {{filter.operator}} {{filter.value}}
+        </div>
+    </div>
+
+    <sm-miner-table
+        [miner]='miner' [tableRows]='minerRows'
+    ></sm-miner-table>
+
+
+</div>

@@ -1,0 +1,18 @@
+<div class='table-responsive'>
+    <table class='table' *ngIf='showTable'>
+        <thead>
+            <tr>
+                <th *ngFor='#col of tableColumns'>
+                    {{col.exhibitionName}}
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor='#row of tableRows'>
+                <td *ngFor='#col of tableColumns'>
+                    {{getRowValue(row, col.fieldId)}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

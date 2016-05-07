@@ -4,7 +4,7 @@ import { IField } from './miner';
 
 @Component({
     selector: 'sm-field-filter',
-    templateUrl: 'app/miners/field-filter.component.html',
+    templateUrl: 'app/miners/miner/field-filter.component.html',
 })
 export class FieldFilterComponent implements OnChanges {
 

@@ -3,11 +3,13 @@ import { Component, OnChanges, Input } from 'angular2/core';
 import { IMiner, IColumnConf, IFilterConf, IFieldFilter, IFilter, IField } from './miner';
 import { MinerService } from './miner.service';
 import { FieldFilterComponent } from './field-filter.component';
+import { MinerTableComponent } from './table/miner-table.component';
 
 @Component({
     selector: 'sm-miner-detail',
-    templateUrl: 'app/miners/miner-detail.component.html',
+    templateUrl: 'app/miners/miner/miner.component.html',
     directives: [
+        MinerTableComponent,
         FieldFilterComponent,
     ]
 })
@@ -15,7 +17,7 @@ export class MinerDetailComponent implements OnChanges {
     @Input() miner_to_find: string;
 
     miner: IMiner;
-    tableRows: any[];
+    minerRows: any[];
     errorMessage: string;
     filters: IField[];
 
@@ -23,6 +25,11 @@ export class MinerDetailComponent implements OnChanges {
     private _loadedSavedFilters: boolean = false;
 
     constructor(private _minerService: MinerService) {
+    }
+
+
+    ngOnChanges(): void {
+        this.getMiner();
     }
 
     getMiner(): void {
@@ -39,57 +46,27 @@ export class MinerDetailComponent implements OnChanges {
 
     getMinerComplete(): void{
         this.loadSavedFilters();
+        this.getRows();
     }
 
-    showTable(): boolean{
-        if(!this.miner.minerColumns){
-            return false;
-        }
-        if(!this.miner.minerColumns.columnsOrder){
-            return false;
-        }
-        if(!this.miner.minerColumns.columnsOrder.length){
-            return false;
-        }
-        if(!this.tableRows){
-            return false;
-        }
-        if(!this.tableRows.length){
-            return false;
-        }
-        return true;
+    getRows(): void{
+        this._minerService.filterMiner(
+            this.getSearchParams()
+        ).subscribe(
+            rows => this.minerRows = rows,
+            error =>  this.errorMessage = <any>error
+        );
     }
 
     getColumnConf(fieldId: string): IColumnConf{
         return this.miner.minerColumns.columnsConf[fieldId];
     }
 
-    getTableColumns(): string[]{
-        return this.miner.minerColumns.columnsOrder;
-    }
 
     getSearchParams(): IFilter{
         let searchParams: IFilter = <IFilter>{};
         searchParams.filters = this.filters;
         return searchParams;
-    }
-
-    getTableRows(): void{
-        this._minerService.filterMiner(
-            this.getSearchParams()
-        ).subscribe(
-            rows => this.tableRows = rows,
-            error =>  this.errorMessage = <any>error
-        );
-    }
-
-    getRowValue(row: any, fieldId: string): any{
-        return row[fieldId];
-    }
-
-    ngOnChanges(): void {
-        this.getMiner();
-        this.getTableRows();
     }
 
     getField(fieldId: string): IField{
