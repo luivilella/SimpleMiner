@@ -9,13 +9,38 @@
 
         </div>
     </div>
-
+    <br/>
     Add custom filters
 
+    <div>
+        Field:
+        <select *ngIf='avaliableFilters && avaliableFilters.length'
+            [(ngModel)]='new_filter.fieldId'
+        >
+            <option>--</option>
+            <option *ngFor='#filter of avaliableFilters'
+                [value]="filter.fieldId"
+            >{{filter.exhibitionName}}</option>
+        </select>
 
+        <select *ngIf='getNewFieldOperators() && getNewFieldOperators().length'
+            [(ngModel)]='new_filter.operator'
+        >
+            <option *ngFor='#operator of getNewFieldOperators()'
+                [value]="operator"
+            >{{operator}}</option>
+        </select>
+
+        <button (click)='addNewFilter()'>Add new Filter</button>
+        {{new_filter.message}}
+    </div>
+
+    <br/>
     Search Filters
     <div>
         <div *ngFor='#filter of filters'>
             {{filter.fieldId}} {{filter.operator}} {{filter.value}}
         </div>
     </div>
+
+
