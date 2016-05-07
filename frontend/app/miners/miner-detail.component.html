@@ -2,6 +2,7 @@
 
     <h3>Name: {{miner.name}}</h3>
 
+    Saved Filters
     <div >
         <div *ngFor='#filter of getSavedFilters()'>
             <sm-field-filter
@@ -17,9 +18,19 @@
         </div>
    </div>
 
+   Add custom filters
+
+
    Search Filters
     <div>
         <div *ngFor='#filter of filters'>
+            {{filter.fieldId}} {{filter.operator}} {{filter.value}}
+        </div>
+   </div>
+
+    getSavedFilters2()
+    <div>
+        <div *ngFor='#filter of getSavedFilters2()'>
             {{filter.fieldId}} {{filter.operator}} {{filter.value}}
         </div>
    </div>

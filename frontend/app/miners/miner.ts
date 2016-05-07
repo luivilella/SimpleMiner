@@ -29,7 +29,10 @@ export interface IColumnConf {
     helpText: string;
     fieldId: string;
     type: string;
-    name: string;      
+    name: string;
+}
+
+export interface IField extends IFieldFilter, IFilterConf, IColumnConf{
 }
 
 export interface IMiner {
