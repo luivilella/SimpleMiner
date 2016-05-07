@@ -1,4 +1,5 @@
-<div *ngIf="type == 'string'" >
-     {{exhibitionName}} {{operator}} 
-     <input type='text' [(ngModel)]='value' (keyup)='fieldChanged()'/>
+
+<div *ngIf="field.type == 'string'" >
+    {{field.exhibitionName}} {{field.operator}}
+     <input type='text' [(ngModel)]='field.value' (keyup)='fieldChanged()'/>
 </div>

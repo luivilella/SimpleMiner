@@ -17,23 +17,28 @@ export class MinerDetailComponent implements OnChanges {
     miner: IMiner;
     tableRows: any[];
     errorMessage: string;
-    filters: IFieldFilter[];
+    filters: IField[];
 
-    private _searchParams: IFilter = <IFilter>{};
-    private _filters: { [id: string]: IFieldFilter } = {};
+    private _filters: { [id: string]: IField } = {};
     private _loadedSavedFilters: boolean = false;
 
     constructor(private _minerService: MinerService) {
     }
 
     getMiner(): void {
+        this.miner = null;
         this._loadedSavedFilters = false;
         this._minerService.getMiner(
             this.miner_to_find
         ).subscribe(
             miner => this.miner = miner,
-            error =>  this.errorMessage = <any>error
+            error =>  this.errorMessage = <any>error,
+            () => this.getMinerComplete()
         );
+    }
+
+    getMinerComplete(): void{
+        this.loadSavedFilters();
     }
 
     showTable(): boolean{
@@ -63,14 +68,15 @@ export class MinerDetailComponent implements OnChanges {
         return this.miner.minerColumns.columnsOrder;
     }
 
-    prepareSearchParams(): void{
-        this._searchParams.filters = this.filters;
+    getSearchParams(): IFilter{
+        let searchParams: IFilter = <IFilter>{};
+        searchParams.filters = this.filters;
+        return searchParams;
     }
 
     getTableRows(): void{
-        this.prepareSearchParams();
         this._minerService.filterMiner(
-            this._searchParams
+            this.getSearchParams()
         ).subscribe(
             rows => this.tableRows = rows,
             error =>  this.errorMessage = <any>error
@@ -86,19 +92,19 @@ export class MinerDetailComponent implements OnChanges {
         this.getTableRows();
     }
 
-    getSavedFilters(): IFilterConf[]{
-        return this.miner.savedFilters;
-    }
-
     getField(fieldId: string): IField{
-        let ret: IField = <IField>{};
         let conf = this.getColumnConf(fieldId);
 
+        let ret: IField = <IField>{};
+        ret.exhibitionName = conf.exhibitionName;
+        ret.helpText = conf.helpText;
         ret.fieldId = conf.fieldId;
+        ret.type = conf.type;
+        ret.name = conf.name;
         return ret;
     }
 
-    loadSavedFilter(): void{
+    loadSavedFilters(): void{
         if(!this.miner){
             return;
         }
@@ -109,34 +115,33 @@ export class MinerDetailComponent implements OnChanges {
         let f_list = this.miner.savedFilters;
         for (let key in f_list) {
             let f = f_list[key];
+            let field = this.getField(f.fieldId);
+            field.operator = f.operator;
+            this._setFilter(field);
         }
 
         this._loadedSavedFilters = true;
+        this.refreshFilters();
     }
-    getSavedFilters2(): IField[]{
-        let ret: IField[] = <IField[]>[];
-        ret.push(this.getField('@m1.client_id'));
-        return ret;
-    }
-
 
     getAvaliableFilters(): string[]{
         return this.miner.avaliableFilters;
     }
 
-    setFilter(filter: IFieldFilter): void{
+    _setFilter(filter: IField): void{
         let key = filter.fieldId + filter.operator;
         this._filters[key] = filter;
+    }
+
+    setFilter(filter: IField): void{
+        this._setFilter(filter);
         this.refreshFilters();
     }
 
     refreshFilters(): void{
-        let ret: IFieldFilter[] = [];
+        let ret: IField[] = <IField[]>[];
         for (let key in this._filters) {
-            let f = this._filters[key];
-            if (f.value){
-                ret.push(f);
-            }
+            ret.push(this._filters[key]);
         }
         this.filters = ret;
     }
