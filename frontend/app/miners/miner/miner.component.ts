@@ -17,7 +17,8 @@ import { MinerSearchComponent } from './search/miner-search.component';
 
     ],
     providers: [
-        MinerUtilsService
+        MinerService,
+        MinerUtilsService,
     ]
 })
 export class MinerComponent implements OnChanges {

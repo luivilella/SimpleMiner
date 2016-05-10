@@ -114,6 +114,8 @@ class TbMinerView(Base):
 
     @property
     def categories_id(self):
+        if not self.__categories_id:
+            return None
         return json.loads(self.__categories_id)
 
     @categories_id.setter
