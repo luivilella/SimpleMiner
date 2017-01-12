@@ -35,7 +35,8 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       app: {
-        environment: JSON.stringify(process.env.APP_ENVIRONMENT || 'development')
+        environment: JSON.stringify(process.env.APP_ENVIRONMENT || 'development'),
+        api_url: JSON.stringify(process.env.APP_ENVIRONMENT === 'production' && '/api' || 'mock/api/')
       }
     })
   ]

@@ -8,7 +8,9 @@ import { Ng2StateDeclaration } from "ui-router-ng2";
   selector: 'dashboard-base',
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent { }
+export class DashboardComponent {
+  minerSearch: string = 'miner';
+}
 
 
 export let DashboardState: Ng2StateDeclaration = {

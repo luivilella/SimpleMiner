@@ -1,0 +1,66 @@
+{
+    "name": "List of Clients",
+    "slug": "client_list",
+    "remark": "",
+
+    "appliedParameters": {
+        "paginator": {},
+        "orderBy": [
+            { 
+                "fieldId": "@m1.client_id", 
+                "order": "desc"
+            }
+        ],
+        "filters": [
+            {
+                "fieldId": "@m1.client_id",
+                "operator": "=",
+                "value": "947421",
+                "forced": false                
+            }
+        ],
+        "limit": null
+    },
+
+    "savedFilters": [
+        {
+            "fieldId": "@m1.client_id",
+            "operator": "="
+        },
+        {
+            "fieldId": "@m1.name",
+            "operator": "like"
+        },
+        {
+            "fieldId": "@m1.name",
+            "operator": "="
+        }        
+    ],
+
+    "avaliableFilters": [
+        "@m1.client_id"
+    ],
+
+    "minerColumns": {
+        "columnsOrder": [
+            "@m1.client_id",
+            "@m1.name"
+        ],
+        "columnsConf": {
+            "@m1.client_id": {
+                "exhibitionName": "#ID",
+                "helpText": "",
+                "fieldId": "@m1.client_id",
+                "type": "string",
+                "name": "client_id"
+            },
+            "@m1.name": {
+                "exhibitionName": "name",
+                "helpText": "",
+                "fieldId": "@m1.name",
+                "type": "string",
+                "name": "name"
+            }
+        }
+    }
+}
