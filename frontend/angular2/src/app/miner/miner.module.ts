@@ -7,6 +7,7 @@ import { MinerComponent } from './miner.component';
 import { MinerService } from './miner.service';
 
 import { MinerSearchComponent } from './search/miner-search.component';
+import { NewFilterComponent } from './search/new-filter.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,7 @@ import { MinerSearchComponent } from './search/miner-search.component';
   ],
   declarations: [
     MinerComponent,
+    NewFilterComponent,
     MinerSearchComponent,
   ],
   exports: [

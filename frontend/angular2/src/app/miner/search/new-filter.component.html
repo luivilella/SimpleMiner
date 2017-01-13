@@ -1,0 +1,17 @@
+<div>
+    Field:
+    <select *ngIf='avaliableFilters.length' [(ngModel)]='fieldId'>
+        <option>--</option>
+        <option *ngFor='let filter of avaliableFilters' [value]="filter.fieldId">{{filter.exhibitionName}}</option>
+    </select>
+
+    <select *ngIf='operators().length' [(ngModel)]='operator'>
+        <option *ngFor='let operator of operators()' [value]="operator">{{operator}}</option>
+    </select>
+
+    <div *ngIf='valid()'>
+        <button (click)='save()'>Save new filter</button>
+        <button (click)='reset()'>Reset filter</button>
+        {{error}}
+    </div>
+</div>

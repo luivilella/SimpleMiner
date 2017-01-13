@@ -1,3 +1,4 @@
+import * as _ from 'lodash';
 import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
@@ -63,7 +64,7 @@ export class MinerService {
             return null;
         }
 
-        return <IField> conf;
+        return <IField> _.cloneDeep(conf);
     }
 
 }
