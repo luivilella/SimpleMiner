@@ -1,2 +1,18 @@
 search diretive
 {{miner.name}}
+
+<div>
+    Field:
+    <select *ngIf='avaliableFilters.length' [(ngModel)]='newFilter.fieldId'>
+        <option>--</option>
+        <option *ngFor='let filter of avaliableFilters' [value]="filter.fieldId">{{filter.exhibitionName}}</option>
+    </select>
+
+    <select *ngIf='newFieldOperators().length' [(ngModel)]='newFilter.operator'>
+        <option *ngFor='let operator of newFieldOperators()' [value]="operator">{{operator}}</option>
+    </select>
+
+    <button (click)='saveNewFilter()' *ngIf='newFilterConfigured()'>Save new filter</button>
+    <button (click)='resetNewFilter()' *ngIf='newFilterConfigured()'>Reset filter</button>
+    {{newFilter.message}}    
+</div>

@@ -10,6 +10,11 @@ export interface IFilterConf {
     operator: string;
 }
 
+export interface INewFilter extends IFilterConf{
+    message: string;
+    messageType: string;
+}
+
 export interface IOrderBy {
     fieldId: string;
     order: string;

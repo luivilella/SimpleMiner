@@ -1,10 +1,10 @@
-import { Component, OnChanges, Input, Output, EventEmitter } from 'angular2/core';
+import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
-import { IField } from '../miner';
+import { IField } from '../interfaces';
 
 @Component({
     selector: 'sm-field-filter',
-    templateUrl: 'app/miners/miner/search/field-filter.component.html',
+    templateUrl: './field-filter.component.html',
 })
 export class FieldFilterComponent implements OnChanges {
 

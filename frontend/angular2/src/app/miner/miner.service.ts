@@ -2,41 +2,37 @@ import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { IMiner, IFilter } from './interfaces';
+import { IMiner, IFilter, IColumnConf, IField } from './interfaces';
 
 @Injectable()
 export class MinerService {
 
-    private _production: boolean = app.environment === 'production';
-    private _baseUrl: string = app.api_url;
+    private baseUrl: string = app.apiURL;
 
     constructor(private _http: Http) { }
 
-    getURL(url){
-        return this._baseUrl + url;
+
+    getURL(url, search=null){
+        let searchParams: URLSearchParams = new URLSearchParams();
+        if (!app.mockAPI){
+            searchParams.setAll(search || {});
+        }
+
+        return this.baseUrl + url;
     }
 
     getMiner(miner: string): Observable<IMiner> {
-        let url = this.getURL('miners/miner.json');
-        let searchParams: URLSearchParams = new URLSearchParams();
-        if (this._production){
-            searchParams.set('miner', miner);
-        }
-        return this._http.get(url, {search: searchParams})
+        let url = this.getURL('miner.json');
+
+        return this._http.get(url)
           .map((response: Response) => <IMiner> response.json())
           .catch(this.handleError);
     }
 
 
     filterMiner(params: IFilter): Observable<any[]> {
-        let url = this.getURL('miners/miner-rows.json');
-
-        let searchParams: URLSearchParams = new URLSearchParams();
-        if (this._production){
-            // searchParams.set('params', params);
-        }
-
-        return this._http.get(url, {search: searchParams})
+        let url = this.getURL('miner-rows.json');
+        return this._http.get(url)
           .map((response: Response) => <IMiner> response.json())
           .catch(this.handleError);
     }
@@ -48,4 +44,26 @@ export class MinerService {
         console.error(error);
         return Observable.throw(error.json().error || 'Server error');
     }
+
+    getColumnConf(fieldId: string, miner: IMiner): IColumnConf{
+        if (!miner){
+            return null;
+        }
+
+        return miner.minerColumns.columnsConf[fieldId];
+    }
+
+    getFieldById(fieldId: string, miner: IMiner): IField{
+        if (!miner){
+            return null;
+        }
+
+        let conf = this.getColumnConf(fieldId, miner);
+        if (!conf){
+            return null;
+        }
+
+        return <IField> conf;
+    }
+
 }

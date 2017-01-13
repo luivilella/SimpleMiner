@@ -1,6 +1,12 @@
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+var appEnv = {
+  environment: 'development',
+  apiURL: 'mock/api/',
+  mockAPI: true
+}
+
 module.exports = {
 
   entry: {
@@ -34,10 +40,7 @@ module.exports = {
       template: './src/index.html'
     }),
     new webpack.DefinePlugin({
-      app: {
-        environment: JSON.stringify(process.env.APP_ENVIRONMENT || 'development'),
-        api_url: JSON.stringify(process.env.APP_ENVIRONMENT === 'production' && '/api' || 'mock/api/')
-      }
+      app: JSON.stringify(appEnv)
     })
   ]
   

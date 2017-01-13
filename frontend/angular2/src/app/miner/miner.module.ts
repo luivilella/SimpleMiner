@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { HttpModule } from "@angular/http";
+import { FormsModule } from "@angular/forms";
 
 import { MinerComponent } from './miner.component';
 import { MinerService } from './miner.service';
@@ -10,17 +11,18 @@ import { MinerSearchComponent } from './search/miner-search.component';
 @NgModule({
   imports: [
     CommonModule,
-    HttpModule
+    HttpModule,
+    FormsModule,
   ],
   declarations: [
     MinerComponent,
-    MinerSearchComponent
+    MinerSearchComponent,
   ],
   exports: [
-    MinerComponent
+    MinerComponent,
   ],
   providers: [
-    MinerService
+    MinerService,
   ],
 })
 export class MinerModule { }

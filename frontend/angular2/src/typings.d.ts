@@ -1,6 +1,7 @@
 declare var app: {
   environment: string;
-  api_url: string;
+  apiURL: string;
+  mockAPI: boolean;
 };
 
 declare function require(id: string): any;
