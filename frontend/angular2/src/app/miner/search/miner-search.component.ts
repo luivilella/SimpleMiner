@@ -1,7 +1,7 @@
 import { Component, OnChanges, Input, Output, EventEmitter} from '@angular/core';
 
-import { IMiner, IField, IColumnConf, INewFilter } from '../interfaces';
-import { MinerService } from '../miner.service';
+import { IMiner, IField, IColumnConf, INewFilter } from '../shared/interfaces';
+import { MinerService } from '../shared/service';
 
 
 @Component({
@@ -20,26 +20,36 @@ export class MinerSearchComponent implements OnChanges {
     }
 
     ngOnChanges(): void {
-        // this.loadSavedFilters();
+        this.loadSavedFilters();
         this.loadAvaliableFilters();
     }
 
     loadAvaliableFilters(): void{
-        let avaliableFilters: IField[] = <IField[]>[];
-
-        let fields = this.miner.avaliableFilters;
-        for (let key in fields) {
-            let fieldId = fields[key];
-            let field = this._minerService.getFieldById(fieldId, this.miner);
-            avaliableFilters.push(field);
-        }
-        this.avaliableFilters = avaliableFilters;
+        this.avaliableFilters = this._minerService.getAvaliableFilters(this.miner);
     }
 
-    addFilter(filter: IField){
-        let filters = this.filters;
-        filters.push(filter);
-        this.filters = filters;
+    addFilter(field: IField){
+        this.filters.push(field)
+    }
+
+    loadSavedFilters(): void{
+        for (let field of this._minerService.getSavedFilters(this.miner)) {
+            this.addFilter(field);
+        }
+    }
+
+    search():void{
+        let fields: IField[] = [];
+        
+        for (let field of this.filters) {
+            if(field.value){
+                fields.push(field);
+            }
+        }
+
+        if(fields.length){
+            this.onSearch.emit(this.filters);    
+        }
     }
 
 }

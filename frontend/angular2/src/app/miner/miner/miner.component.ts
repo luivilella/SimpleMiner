@@ -1,7 +1,6 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import { MinerService } from './miner.service';
-import { IMiner, IFilter, IField } from './interfaces';
-import { MinerSearchComponent } from './search/miner-search.component';
+import { MinerService } from '../shared/service';
+import { IMiner, IFilter, IField } from '../shared/interfaces';
 
 @Component({
   selector: 'sm-miner-component',
@@ -21,7 +20,6 @@ export class MinerComponent implements OnChanges {
     ngOnChanges(): void {
       this.getMiner();
     }    
-
 
     getMiner(): void {
         this.miner = null;

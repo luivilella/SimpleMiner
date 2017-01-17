@@ -1,9 +1,8 @@
 import * as _ from 'lodash';
 import { Component, DoCheck, Input, Output, EventEmitter} from '@angular/core';
 
-import { IMiner, IField } from '../interfaces';
-import { MinerService } from '../miner.service';
-
+import { IMiner, IField } from '../shared/interfaces';
+import { MinerService } from '../shared/service';
 
 @Component({
     selector: 'sm-new-filter',

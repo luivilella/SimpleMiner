@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Http, Response, URLSearchParams } from '@angular/http';
 import { Observable } from 'rxjs/Observable';
 
-import { IMiner, IFilter, IColumnConf, IField } from './interfaces';
+import { IMiner, IFilter, IColumnConf, IField, IFilterConf } from './interfaces';
 
 @Injectable()
 export class MinerService {
@@ -65,6 +65,37 @@ export class MinerService {
         }
 
         return <IField> _.cloneDeep(conf);
+    }
+
+    getFieldByFilterConf(filterConf: IFilterConf, miner: IMiner): IField{
+        let field = this.getFieldById(filterConf.fieldId, miner);
+        if(!field){
+            return null;
+        }
+
+        field.operator = filterConf.operator;
+        return field;
+    }
+
+    getAvaliableFilters(miner: IMiner): IField[]{
+        let fields: IField[] = <IField[]>[];
+
+        for (let fieldId of miner.avaliableFilters) {
+            let field = this.getFieldById(fieldId, miner);
+            fields.push(field);
+        }        
+        return fields;
+    }
+
+    getSavedFilters(miner: IMiner): IField[]{
+        let fields: IField[] = <IField[]>[];
+
+        for (let filterConf of miner.savedFilters) {
+            let field = this.getFieldByFilterConf(filterConf, miner);
+            fields.push(field);
+        }
+
+        return fields;
     }
 
 }

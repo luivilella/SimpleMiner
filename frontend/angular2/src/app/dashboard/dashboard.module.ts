@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { UIRouterModule } from 'ui-router-ng2';
 
-import { MinerModule } from '../miner/miner.module';
+import { MinerModule } from '../miner/module';
 
 import { DashboardState, DashboardComponent } from './dashboard.component';
 

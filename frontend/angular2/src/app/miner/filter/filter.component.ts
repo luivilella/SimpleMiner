@@ -1,12 +1,12 @@
 import { Component, OnChanges, Input, Output, EventEmitter } from '@angular/core';
 
-import { IField } from '../interfaces';
+import { IField } from '../shared/interfaces';
 
 @Component({
-    selector: 'sm-field-filter',
-    templateUrl: './field-filter.component.html',
+    selector: 'sm-filter',
+    templateUrl: './filter.component.html',
 })
-export class FieldFilterComponent implements OnChanges {
+export class FilterComponent implements OnChanges {
 
     @Input() field: IField;
     @Output() onChange: EventEmitter<IField> = new EventEmitter<IField>();
