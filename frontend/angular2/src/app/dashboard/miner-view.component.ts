@@ -5,16 +5,18 @@ import { Ng2StateDeclaration } from "ui-router-ng2";
 
 
 @Component({
-  selector: 'dashboard-base',
-  templateUrl: './base.component.html'
+  selector: 'miner-view',
+  templateUrl: './miner-view.component.html'
 })
-export class DashboardComponent { }
+export class MinerViewComponent {
+  minerSearch: string = 'miner';
+}
 
 
-export let DashboardState: Ng2StateDeclaration = {
-  name: 'app.dashboard',
-  url: '/dashboard',
+export let MinerViewState: Ng2StateDeclaration = {
+  name: 'app.dashboard.miner',
+  url: '/miner',
   views: {
-    $default: { component: DashboardComponent }
-  }
+    $default: { component: MinerViewComponent }
+  }  
 }
