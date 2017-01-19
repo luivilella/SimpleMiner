@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Ng2StateDeclaration } from "ui-router-ng2";
+import { Ng2StateDeclaration, UIRouter } from "ui-router-ng2";
 
 
 import { MinerViewComponent } from './miner-view.component'
@@ -9,6 +9,9 @@ import { MinerViewComponent } from './miner-view.component'
   templateUrl: './dashboard.component.html'
 })
 export class DashboardComponent {
+    constructor(private _router: UIRouter) {
+       this._router.stateService.go('app.dashboard.miner');
+    }  
 }
 
 

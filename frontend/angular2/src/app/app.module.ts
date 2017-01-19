@@ -7,8 +7,6 @@ import { AppComponent } from './app.component';
 import { DashboardModule } from './dashboard/module';
 import { AdminModule } from './admin/admin.module';
 
-import 'material-design-lite/dist/material.min';
-
 let states: Ng2StateDeclaration[] = [
     { name: 'app', component: AppComponent },
 ];

@@ -15,7 +15,8 @@ module.exports = {
       'core-js/es6',
       'core-js/es7/reflect',
       'zone.js/dist/zone'
-    ]
+    ],
+    style: './src/index.scss'
   },
   output: {
     path: './dist',
@@ -25,19 +26,24 @@ module.exports = {
     loaders: [
       {test: /\.component.ts$/, loader: 'ts!angular2-template'},
       {test: /\.ts$/, exclude: /\.component.ts$/, loader: 'ts'},
-      {test: /\.html$/, loader: 'raw'},
-      {test: /\.css$/, loader: 'raw'}
+      {test: /\.html$/, loader: 'html'},
+      {
+        test: /\.css$/,        
+        loader: 'raw!style!css'
+      },
+      {
+        test: /\.scss$/,
+        loader: "style!css!autoprefixer!sass"
+      }   
     ]
   },
   resolve: {
-    extensions: ['', '.js', '.ts', '.html', '.css']
+    extensions: ['', '.js', '.json', '.ts', '.html', '.css', '.scss']
   },
   plugins: [
-    new webpack.optimize.CommonsChunkPlugin({
-      name: 'polyfills'
-    }),
     new HtmlWebpackPlugin({
-      template: './src/index.html'
+      template: './src/index.html',
+      chunks: ['polyfills', 'style', 'app'],
     }),
     new webpack.DefinePlugin({
       app: JSON.stringify(appEnv)
