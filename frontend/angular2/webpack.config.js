@@ -16,7 +16,9 @@ module.exports = {
       'core-js/es7/reflect',
       'zone.js/dist/zone'
     ],
-    style: './src/index.scss'
+    style: [
+      './src/index.scss'
+    ]
   },
   output: {
     path: './dist',
@@ -33,8 +35,12 @@ module.exports = {
       },
       {
         test: /\.scss$/,
-        loader: "style!css!autoprefixer!sass"
-      }   
+        loader: 'style!css!autoprefixer!sass'
+      },
+      { 
+        test: /\.(jpe?g|png|gif|svg|eot|woff|ttf|svg|woff2)$/,
+        loader: 'url-loader?name=[name].[ext]' 
+      }
     ]
   },
   resolve: {

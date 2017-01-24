@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Ng2StateDeclaration, UIRouter } from "ui-router-ng2";
 
 
@@ -8,10 +8,15 @@ import { MinerViewComponent } from './miner-view.component'
   selector: 'dashboard-base',
   templateUrl: './dashboard.component.html'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
     constructor(private _router: UIRouter) {
-       this._router.stateService.go('app.dashboard.miner');
-    }  
+       
+    }
+    
+    ngOnInit(): void{
+      this._router.stateService.go('app.dashboard.miner');
+    }
+
 }
 
 
