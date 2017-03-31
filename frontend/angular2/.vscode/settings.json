@@ -1,0 +1,9 @@
+{
+    "files.exclude": {
+        "node_modules/": true,
+        "src/**/*.js": true,
+        "src/**/*.map": true
+    },
+    "editor.tabSize": 2,
+    "files.autoSave": "afterDelay"
+}

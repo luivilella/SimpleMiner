@@ -1,0 +1,18 @@
+search diretive
+{{miner.name}}
+
+Saved Filters
+<div >
+    <div *ngFor='let filter of filters'>
+        <sm-filter [field]='filter'></sm-filter>
+    </div>    
+</div>
+
+<sm-new-filter
+    [miner]='miner'
+    [currentFilters]='filters'
+    [avaliableFilters]='avaliableFilters'
+    (newFilter)='addFilter($event)'
+></sm-new-filter>
+
+<button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent" (click)='search()'> Applay Filters </button>

@@ -1,3 +1,6 @@
+#IDE
+.idea/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -62,9 +65,9 @@ target/
 .ipynb_checkpoints
 
 #Project
-config/
-frontend/node_modules/
-frontend/.vscode/
-frontend/typings/
-frontend/app/**/*.js
-frontend/app/**/*.map
+backend/config/
+frontend/**/node_modules/
+frontend/**/dist/
+frontend/**/typings/
+frontend/**/app/**/*.js
+frontend/**/app/**/*.map
